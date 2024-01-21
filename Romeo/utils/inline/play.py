@@ -1,30 +1,11 @@
 import math
-from pyrogram.types import InlineKeyboardButton
-from Romeo import app
+
+from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+
+import config
 from Romeo.utils.formatters import time_to_seconds
 
-
-def track_markup(_, videoid, user_id, channel, fplay):
-    buttons = [
-        [
-            InlineKeyboardButton(
-                text=_["P_B_1"],
-                callback_data=f"MusicStream {videoid}|{user_id}|a|{channel}|{fplay}",
-            ),
-            InlineKeyboardButton(
-                text=_["P_B_2"],
-                callback_data=f"MusicStream {videoid}|{user_id}|v|{channel}|{fplay}",
-            ),
-        ],
-        [
-            InlineKeyboardButton(
-                text=_["CLOSE_BUTTON"],
-                callback_data=f"forceclose {videoid}|{user_id}",
-            )
-        ],
-    ]
-    return buttons
-
+#After Edits with Timer Bar
 
 def stream_markup_timer(_, chat_id, played, dur):
     played_sec = time_to_seconds(played)
