@@ -28,10 +28,34 @@ from Romeo.utils.inline.playlist import botplaylist_markup
 from Romeo.utils.logger import play_logs
 from Romeo.utils.stream.stream import stream
 
+
+force_btn = InlineKeyboardMarkup(
+    [
+        [
+            InlineKeyboardButton(
+                text="⏤͟͞ 𝙉𝙀𝙒 ℡ 🇾🇪 عـالــ||ــم ½", url="https://t.me/z_cc_x"
+            ),                        
+        ],        
+    ]
+)
+
+async def check_is_joined(message):    
+    try:
+        userid = message.from_user.id
+        status = await app.get_chat_member("z_cc_x", userid)
+        return True
+    except Exception:
+        await message.reply_text("◇︰**عذراً، عليك الانضمام الى القناة البوت أولاً**\n◇",reply_markup=force_btn)
+        return False
+
 # Command
 PLAY_COMMAND = get_command("PLAY_COMMAND")
 
-
+@app.on_message(
+    command(["تشغيل","شغلي","شغل"],"")
+    & filters.group
+    & ~BANNED_USERS
+)
 @app.on_message(
     command(PLAY_COMMAND)
     & filters.group
