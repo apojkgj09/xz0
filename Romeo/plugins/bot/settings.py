@@ -8,14 +8,14 @@ from config import (BANNED_USERS, CLEANMODE_DELETE_MINS,
 from helper import get_command
 from Romeo import app
 from Romeo.utils.database import (add_nonadmin_chat,
-                                       cleanmode_off, cleanmode_on,
+                                       
                                        commanddelete_off,
                                        commanddelete_on,
                                        get_aud_bit_name, get_authuser,
                                        get_authuser_names,
                                        get_playmode, get_playtype,
                                        get_vid_bit_name,
-                                       is_cleanmode_on,
+                                       
                                        is_commanddelete_on,
                                        is_nonadmin_chat,
                                        remove_nonadmin_chat,
@@ -471,55 +471,3 @@ async def authusers_mar(client, CallbackQuery, _):
     except MessageNotModified:
         return
 
-
-## Clean Mode
-
-
-@app.on_callback_query(
-    filters.regex(
-        pattern=r"^(CLEANMODE|COMMANDELMODE)$"
-    )
-    & ~BANNED_USERS
-)
-@ActualAdminCB
-async def cleanmode_mark(client, CallbackQuery, _):
-    command = CallbackQuery.matches[0].group(1)
-    try:
-        await CallbackQuery.answer(_["set_cb_6"], show_alert=True)
-    except:
-        pass
-    if command == "CLEANMODE":
-        sta = None
-        if await is_commanddelete_on(CallbackQuery.message.chat.id):
-            sta = True
-        cle = None
-        if await is_cleanmode_on(CallbackQuery.message.chat.id):
-            await cleanmode_off(CallbackQuery.message.chat.id)
-        else:
-            await cleanmode_on(CallbackQuery.message.chat.id)
-            cle = True
-        buttons = cleanmode_settings_markup(
-            _, status=cle, dels=sta
-        )
-        return await CallbackQuery.edit_message_reply_markup(
-            reply_markup=InlineKeyboardMarkup(buttons)
-        )
-    if command == "COMMANDELMODE":
-        cle = None
-        sta = None
-        if await is_cleanmode_on(CallbackQuery.message.chat.id):
-            cle = True
-        if await is_commanddelete_on(CallbackQuery.message.chat.id):
-            await commanddelete_off(CallbackQuery.message.chat.id)
-        else:
-            await commanddelete_on(CallbackQuery.message.chat.id)
-            sta = True
-        buttons = cleanmode_settings_markup(
-            _, status=cle, dels=sta
-        )
-    try:
-        return await CallbackQuery.edit_message_reply_markup(
-            reply_markup=InlineKeyboardMarkup(buttons)
-        )
-    except MessageNotModified:
-        return
